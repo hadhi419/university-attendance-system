@@ -1,0 +1,20 @@
+git pull origin main
+
+git add .
+
+git commit -m "Implement attendance recording API"
+
+git push origin main
+
+
+
+
+git pull origin main
+
+git add .
+
+git commit -m "Implement attendance recording API"
+
+git checkout -b feature/attendance-api
+
+git push origin feature/attendance-api
