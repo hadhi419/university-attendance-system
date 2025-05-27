@@ -12,6 +12,24 @@ public class AttendanceRecord {
     private String remarks;
     private Integer recorded_by;
     private Timestamp created_at;
+    private String firstName;
+    private String lastName;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
 
     public int getRecord_id() {

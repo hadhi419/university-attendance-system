@@ -44,4 +44,22 @@ public class StudentService {
         });
     }
 
+
+    public List<Student> getStudentsByCourse(String course_code) {
+        String sql = "SELECT * FROM students s JOIN enrollments e ON s.registration_number = e.registration_number  WHERE e.course_code = ?";
+
+        return jdbcTemplate.query(sql,  new Object[]{course_code}, new RowMapper<Student>() {
+            @Override
+            public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Student student = new Student();
+                student.setRegistrationNumber(rs.getString("registration_number"));
+                student.setFirstName(rs.getString("first_name"));
+                student.setLastName(rs.getString("last_name"));
+                student.setEmail(rs.getString("email"));
+                student.setCreatedAt(rs.getTimestamp("created_at"));
+                return student;
+            }
+        });
+    }
+
 }
