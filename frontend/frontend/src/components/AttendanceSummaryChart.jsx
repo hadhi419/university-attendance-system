@@ -31,14 +31,12 @@ const AttendanceSummaryChart = ({ data }) => {
 
   return (
     <>
-    <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-start">
-  <h2 className="text-xl font-semibold mb-4">
-    Attendance Summary for {data.first_name} {data.last_name} <br />Subject Code {data.courseCode}
-  </h2>
+    <div className="bg-cyan-900 border-1  p-4 flex flex-col w-77 h-84  rounded-3xl txt  items-center justify-center">
+          <h2 className="text-black">{data.course_code}</h2>
   <div className="p-4 border rounded-2xl shadow-md bg-white w-72 h-80 max-w-md">
     <Pie data={chartData} options={options} />
     <p className="mt-2 text-sm text-gray-500">
-      Total Sessions: {data.totalSessions}
+      Total Sessions: {data.totalSessions} 
     </p>
   </div>
     </div>

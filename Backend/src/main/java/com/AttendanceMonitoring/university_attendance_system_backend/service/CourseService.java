@@ -23,7 +23,7 @@ public class CourseService {
         return jdbcTemplate.update(sql,
                 course.getCourse_code(),
                 course.getCourse_name()
-                );
+        );
     }
 
 
@@ -31,16 +31,25 @@ public class CourseService {
     {
         String sql = "SELECT * FROM courses";
 
-        return jdbcTemplate.query(sql, new RowMapper<Course>() {
-            @Override
-            public Course mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Course course = new Course();
-                course.setCourse_code(rs.getString("course_code"));
-                course.setCourse_name(rs.getString("course_name"));
-
-                return course;
-            }
+        return jdbcTemplate.query(sql, (rs,rawNum)->{
+            Course course = new Course();
+            course.setCourse_code(rs.getString("course_code"));
+            course.setCourse_name(rs.getString("course_name"));
+            course.setCreated_at(rs.getTimestamp("created_at"));
+            return course;
         });
+    }
+
+    public List<Course> getCoursesByStudentId(String registrationNumber) {
+        String sql = "SELECT * FROM courses c JOIN enrollments e ON c.course_code=e.course_code WHERE e.registration_number = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Course course = new Course();
+            course.setCourse_code(rs.getString("course_code"));
+            course.setCourse_name(rs.getString("course_name"));
+            course.setCreated_at(rs.getTimestamp("created_at"));
+            return course;
+        }, registrationNumber);
     }
 
 }

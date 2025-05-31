@@ -3,10 +3,12 @@ package com.AttendanceMonitoring.university_attendance_system_backend.model;
 import java.sql.Timestamp;
 
 public class Course {
+
     private String course_code;
     private String course_name;
     private Timestamp created_at;
 
+    // Getters and setters
     public String getCourse_code() {
         return course_code;
     }

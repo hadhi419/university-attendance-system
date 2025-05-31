@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/courses")
 public class CourseController {
 
@@ -35,6 +36,18 @@ public class CourseController {
     @GetMapping("/getCourses")
     public ResponseEntity<List<Course>> getCourses(){
         List<Course> courseList = courseService.getCourses();
+        if(courseList.isEmpty())
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        else {
+            return ResponseEntity.ok(courseList);
+        }
+    }
+
+    @GetMapping("/getCoursesByStudentId/{studentId}")
+    public ResponseEntity<List<Course>> getCoursesByStudentId(@PathVariable String studentId){
+        List<Course> courseList = courseService.getCoursesByStudentId(studentId);
         if(courseList.isEmpty())
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

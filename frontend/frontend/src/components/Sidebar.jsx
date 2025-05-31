@@ -11,7 +11,7 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`bg-blue-600 text-white p-4 transition-all duration-300 ${
+      className={`bg-cyan-800 text-white p-4 transition-all duration-300 ${
         collapsed ? 'w-16' : 'w-64'
       }`}
     >
@@ -36,12 +36,13 @@ const Sidebar = () => {
           <Link to="/admin" className="hover:underline">
             Admin Panel
           </Link>
-          <Link to="/login" className="hover:underline">
-            Logout
-          </Link>
           <Link to="/record" className="hover:underline">
             Record
           </Link>
+          <Link to="/login" className="hover:underline" onClick={() => localStorage.removeItem('token')}>
+            Logout
+          </Link>
+          
         </nav>
       )}
     </aside>

@@ -1,48 +1,90 @@
-import React from 'react';
-import AttendanceRecorder from '../components/AttendanceRecorder';
-import { useState } from 'react';
-
-
-
-
+import React, { useState } from 'react';
 import axios from 'axios';
-
+import AttendanceRecorder from '../components/AttendanceRecorder';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const Record = () => {
-
   const [courseCode, setCourseCode] = useState("");
   const [students, setStudents] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date()); // 🟡 Date
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchStudents = async () => {
+    if (!courseCode) {
+      alert("Please enter a course code.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
     try {
-      const response = await axios.get(`http://localhost:8080/students/course/${courseCode}`);
+
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`http://localhost:8080/students/course/${courseCode}`,
+        {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+        }
+      );
       console.log("Fetched students:", response.data);
       setStudents(response.data);
     } catch (error) {
       console.error("Error fetching students:", error);
+      setError("Failed to load students. Please check the course code or server status.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  
   return (
     <>
-    <div className="mx-6 flex border border-gray-300 rounded overflow-hidden w-130">
-      <input
-        type="text"
-        placeholder="Course Code"
-        className="flex-1 px-3 py-2 outline-none"
-        value={courseCode}
-        onChange={(e) => setCourseCode(e.target.value)}
-      />
-      <button
-        className="bg-cyan-500 text-white px-4 hover:bg-cyan-600 transition" onClick={fetchStudents}
-      >
-        Fetch Students
-      </button>
-    </div>
-      <div>
-      <AttendanceRecorder students={students} courseCode={courseCode} />
-    </div>
+      <div className="p-6">
+        <div className="flex flex-col md:flex-row items-center md:space-x-4 mb-4">
+          <input
+            type="text"
+            placeholder="Course Code"
+            className="flex-1 border border-gray-300 rounded px-3 py-2 outline-none mb-2 md:mb-0"
+            value={courseCode}
+            onChange={(e) => setCourseCode(e.target.value)}
+          />
+
+          {/* 🟡 Date Picker */}
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => {setSelectedDate(date);
+                                console.log("Selected date:", date)
+            }}
+            className="border border-gray-300 rounded px-3 py-2 outline-none"
+            dateFormat="yyyy-MM-dd"
+          />
+
+          <button
+            className="bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600 hover:rounded-xl ttransition-all duration-300 md:mt-0"
+            onClick={fetchStudents}
+          >
+            Fetch Students
+          </button>
+        </div>
+
+        {loading && <p className="text-blue-500">Loading students...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+
+        {students.length > 0 ? (
+          <AttendanceRecorder
+            students={students}
+            courseCode={courseCode}
+            selectedDate={selectedDate} // 🟡 Pass to AttendanceRecorder
+          />
+        ) : (
+          <p className="text-gray-500">
+            No students loaded yet. Please enter a course code and click "Fetch Students".
+          </p>
+        )}
+      </div>
     </>
   );
 };
