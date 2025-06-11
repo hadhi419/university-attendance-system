@@ -21,7 +21,7 @@ const AttendanceSummaryChart = ({ data }) => {
     responsive: true,
     plugins: {
       legend: {
-        position: "bottom",
+        position: "top",
       },
       tooltip: {
         enabled: true,
@@ -31,7 +31,7 @@ const AttendanceSummaryChart = ({ data }) => {
 
   return (
     <>
-    <div className="bg-cyan-900 border-1  p-4 flex flex-col w-77 h-84  rounded-3xl txt  items-center justify-center">
+    <div className="bg-green-400 border-4  p-4 flex flex-col w-72 h-78  rounded-3xl txt  items-center justify-center">
           <h2 className="text-black">{data.course_code}</h2>
   <div className="p-4 border rounded-2xl shadow-md bg-white w-72 h-80 max-w-md">
     <Pie data={chartData} options={options} />
@@ -39,7 +39,7 @@ const AttendanceSummaryChart = ({ data }) => {
       Total Sessions: {data.totalSessions} 
     </p>
   </div>
-    </div>
+  </div>
 
 
     </>

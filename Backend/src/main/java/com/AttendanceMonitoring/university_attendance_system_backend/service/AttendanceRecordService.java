@@ -1,10 +1,14 @@
 package com.AttendanceMonitoring.university_attendance_system_backend.service;
 
+import com.AttendanceMonitoring.university_attendance_system_backend.dto.AttendanceByDate;
 import com.AttendanceMonitoring.university_attendance_system_backend.dto.AttendanceSummary;
 import com.AttendanceMonitoring.university_attendance_system_backend.model.AttendanceRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.sql.Date;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -88,5 +92,32 @@ public class AttendanceRecordService {
         record.setRecorded_by(rs.getObject("recorded_by") != null ? rs.getInt("recorded_by") : null);
         record.setCreated_at(rs.getTimestamp("created_at"));
         return record;
+    }
+
+    private AttendanceByDate mapRowByDate(ResultSet rs) throws SQLException {
+        AttendanceByDate record = new AttendanceByDate();
+        record.setDate(rs.getDate("date").toLocalDate());  // assuming AttendanceByDate.date is LocalDate
+        record.setCourseCode(rs.getString("course_code"));
+        record.setCourseName(rs.getString("course_name"));
+        record.setStatus(rs.getString("status"));
+        return record;
+    }
+
+    public List<AttendanceByDate> getAttendanceByDate(String registrationNumber, LocalDate date) {
+        String sql = "SELECT a.date, a.course_code, b.course_name, a.status " +
+                "FROM attendance_records a " +
+                "JOIN courses b ON a.course_code = b.course_code " +
+                "WHERE a.registration_number = ? AND a.date = ?";
+
+        Date sqlDate = Date.valueOf(date);  // Convert LocalDate to java.sql.Date
+
+        return jdbcTemplate.query(sql, new Object[]{registrationNumber, sqlDate}, (rs, rowNum) -> mapRowByDate(rs));
+    }
+
+    public List<AttendanceByDate> getAttendanceByDateSummary(String registrationNumber, LocalDate date) {
+
+       List<AttendanceByDate> records = getAttendanceByDate(registrationNumber, date);
+
+    return records;
     }
 }

@@ -6,6 +6,10 @@ import AdminPanel from '../pages/AdminPanel';
 import Login from '../pages/Login';
 import Record from '../pages/Record';
 import PrivateRoute from '../utils/privateRoute';
+import Summary from '../pages/DashboardMenu/summary';
+import ByDate from '../pages/DashboardMenu/ByDate';
+// import Courses from '../pages/DashboardMenu/Courses';
+
 
 const AppRouter = () => {
   // React state for authentication
@@ -27,6 +31,10 @@ const AppRouter = () => {
             <Route index element={<Dashboard />} />
             <Route path="admin" element={<AdminPanel />} />
             <Route path="record" element={<Record />} />
+
+
+            <Route path="DashboardMenu/summary" element={<Summary />} />
+            <Route path="DashboardMenu/by-date" element={<ByDate />} />
           </Route>
         </Route>
       </Routes>

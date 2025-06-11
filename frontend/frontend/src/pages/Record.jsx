@@ -3,6 +3,8 @@ import axios from 'axios';
 import AttendanceRecorder from '../components/AttendanceRecorder';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { ClipLoader } from 'react-spinners';
+
 
 const Record = () => {
   const [courseCode, setCourseCode] = useState("");
@@ -70,7 +72,12 @@ const Record = () => {
           </button>
         </div>
 
-        {loading && <p className="text-blue-500">Loading students...</p>}
+        {loading && (
+          <div className="flex justify-center my-4">
+            <ClipLoader color="#06b6d4" size={35} />
+          </div>
+        )}
+
         {error && <p className="text-red-500">{error}</p>}
 
         {students.length > 0 ? (

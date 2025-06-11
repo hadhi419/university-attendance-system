@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import AttendanceSummaryChart from '../components/AttendanceSummaryChart';
+import AttendanceSummaryChart from '../../components/AttendanceSummaryChart';;
 
 const Dashboard = () => {
   const [result, setResult] = useState(null);

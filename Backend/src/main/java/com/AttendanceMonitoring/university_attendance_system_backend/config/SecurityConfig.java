@@ -36,9 +36,16 @@ public class SecurityConfig {
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
+
+                registry.addMapping("/courses/**") // this must be separate
+                        .allowedOrigins("http://localhost:5173")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
