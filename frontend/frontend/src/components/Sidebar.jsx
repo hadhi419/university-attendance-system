@@ -6,6 +6,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
+  const [adminOpen, setadminOpen] = useState(false);
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
@@ -14,6 +15,11 @@ const Sidebar = () => {
   const toggleDashboardMenu = () => {
     setDashboardOpen(!dashboardOpen);
   };
+
+    const toggleAdminMenu = () => {
+    setadminOpen(!adminOpen);
+  };
+
 
   return (
     <aside
@@ -44,8 +50,28 @@ const Sidebar = () => {
             {dashboardOpen && (
               <div className="ml-4 mt-2 flex flex-col gap-2 text-sm">
                 <Link to="/DashboardMenu/summary" className="hover:underline">Attendance Summary</Link>
-                <Link to="DashboardMenu/by-date" className="hover:underline">Attendance by Date</Link>
-                <Link to="/DashboardMenu/courses" className="hover:underline">Course Attendance</Link>
+                <Link to="DashboardMenu/AttendanceByDate" className="hover:underline">Attendance by Date</Link>
+                <Link to="/DashboardMenu/AttendanceByCourse" className="hover:underline">Course Attendance</Link>
+              </div>
+            )}
+          </div>
+
+
+          <div>
+            <button
+              onClick={toggleAdminMenu}
+              className="flex justify-between items-center w-full hover:underline"
+            >
+              <span>Admin</span>
+              {dashboardOpen ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
+            </button>
+
+            {/* Dashboard submenu */}
+            {adminOpen && (
+              <div className="ml-4 mt-2 flex flex-col gap-2 text-sm">
+                <Link to="/AdminMenu/AddStudent" className="hover:underline">Add Student</Link>
+                <Link to="DashboardMenu/AttendanceByDate" className="hover:underline">Add Lecturer</Link>
+                <Link to="/DashboardMenu/AttendanceByCourse" className="hover:underline">Add other staff</Link>
               </div>
             )}
           </div>

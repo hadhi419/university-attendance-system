@@ -8,6 +8,8 @@ import Record from '../pages/Record';
 import PrivateRoute from '../utils/privateRoute';
 import Summary from '../pages/DashboardMenu/summary';
 import ByDate from '../pages/DashboardMenu/ByDate';
+import AttendanceByCourse from '../pages/DashboardMenu/AttendanceByCourse';
+import AddStudent from '../pages/AdminMenu/AddStudent';
 // import Courses from '../pages/DashboardMenu/Courses';
 
 
@@ -34,7 +36,9 @@ const AppRouter = () => {
 
 
             <Route path="DashboardMenu/summary" element={<Summary />} />
-            <Route path="DashboardMenu/by-date" element={<ByDate />} />
+            <Route path="DashboardMenu/AttendanceByDate" element={<ByDate />} />
+            <Route path="DashboardMenu/AttendanceByCourse" element={<AttendanceByCourse />} />
+            <Route path="AdminMenu/AddStudent" element={<AddStudent />} />
           </Route>
         </Route>
       </Routes>

@@ -35,11 +35,11 @@ public class AuthController {
 
         try {
             User user = jdbcTemplate.queryForObject(
-                    "SELECT * FROM users WHERE username = ?",
+                    "SELECT * FROM users WHERE email = ?",
                     (rs, rowNum) -> {
                         User u = new User();
                         u.setId(rs.getLong("id"));
-                        u.setUsername(rs.getString("username"));
+                        u.setEmail(rs.getString("email"));
                         u.setPassword(rs.getString("password"));
                         u.setRole(rs.getString("role"));
                         return u;
@@ -48,8 +48,8 @@ public class AuthController {
             );
 
             if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-                String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
-                UserResponse userResponse = new UserResponse(user.getUsername(), user.getRole());
+                String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+                UserResponse userResponse = new UserResponse(user.getEmail(), user.getRole());
 
                 return ResponseEntity.ok(Map.of(
                         "user", userResponse,
@@ -57,11 +57,11 @@ public class AuthController {
                 ));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("message", "Invalid username or password"));
+                        .body(Map.of("message", "Invalid email or password"));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Invalid username or password"));
+                    .body(Map.of("message", "Invalid email or password"));
         }
     }
 }

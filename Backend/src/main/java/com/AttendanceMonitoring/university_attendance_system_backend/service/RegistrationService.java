@@ -18,23 +18,23 @@ public class RegistrationService {
     }
 
     @Transactional
-    public User registerUser(String username, String password, String role) throws Exception {
+    public User registerUser(String email, String password, String role) throws Exception {
         Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM users WHERE username = ?", Integer.class, username);
+                "SELECT COUNT(*) FROM users WHERE email = ?", Integer.class, email);
 
         if (count != null && count > 0) {
-            throw new Exception("Username already taken");
+            throw new Exception("Email already taken");
         }
 
         String hashedPassword = passwordEncoder.encode(password);
 
         jdbcTemplate.update(
-                "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
-                username, hashedPassword, role != null ? role : "student"
+                "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
+                email, hashedPassword, role != null ? role : "student"
         );
 
         User user = new User();
-        user.setUsername(username);
+        user.setEmail(email);
         user.setPassword(hashedPassword);
         user.setRole(role != null ? role : "student");
 

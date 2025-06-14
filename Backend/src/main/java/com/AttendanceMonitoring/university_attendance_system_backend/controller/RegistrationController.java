@@ -1,4 +1,4 @@
-package com.AttendanceMonitoring.university_attendance_system_backend.config;
+package com.AttendanceMonitoring.university_attendance_system_backend.controller;
 
 import com.AttendanceMonitoring.university_attendance_system_backend.model.User;
 import com.AttendanceMonitoring.university_attendance_system_backend.service.RegistrationService;
@@ -19,7 +19,7 @@ public class RegistrationController {
 
     // DTO for registration request (you can create a separate class if you want)
     public static class RegistrationRequest {
-        public String username;
+        public String email;
         public String password;
         public String role;
     }
@@ -27,7 +27,7 @@ public class RegistrationController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegistrationRequest request) {
         try {
-            User newUser = registrationService.registerUser(request.username, request.password, request.role);
+            User newUser = registrationService.registerUser(request.email, request.password, request.role);
             // Don't return the password in response
             newUser.setPassword(null);
             return ResponseEntity.ok(newUser);

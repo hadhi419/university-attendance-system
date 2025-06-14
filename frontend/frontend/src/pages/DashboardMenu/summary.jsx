@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AttendanceSummaryChart from '../../components/AttendanceSummaryChart';;
+import AttendanceSummaryChart from '../../components/AttendanceSummaryChart';
 
 const Dashboard = () => {
   const [result, setResult] = useState(null);
@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [courses, setCourses] = useState([]);
   const [registrationNumber, setRegistrationNumber] = useState('');
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [showChart, setShowChart] = useState(false);
 
   const fetchCourses = async () => {
     if (!registrationNumber.trim()) {
@@ -21,6 +22,7 @@ const Dashboard = () => {
     setCourses([]);
     setResult(null);
     setSelectedCourse(null);
+    setShowChart(false);
 
     try {
       const token = localStorage.getItem('token');
@@ -28,7 +30,7 @@ const Dashboard = () => {
         `http://localhost:8080/courses/getCoursesByStudentId/${registrationNumber}`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -45,13 +47,14 @@ const Dashboard = () => {
   const fetchData = async (registrationNumber, courseCode) => {
     setSelectedCourse(courseCode);
     setLoading(true);
+    setShowChart(false); // Hide chart before loading new data
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
         `http://localhost:8080/attendance/student/${registrationNumber}/course/${courseCode}`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -59,10 +62,22 @@ const Dashboard = () => {
     } catch (err) {
       console.error("Error fetching attendance:", err);
       setError(err);
+      setResult(null);
     } finally {
       setLoading(false);
     }
   };
+
+  // Trigger fade-in animation when result changes
+  useEffect(() => {
+    if (result) {
+      // Small delay to trigger CSS transition
+      const timer = setTimeout(() => setShowChart(true), 50);
+      return () => clearTimeout(timer);
+    } else {
+      setShowChart(false);
+    }
+  }, [result]);
 
   const getChartHeight = () => {
     if (courses.length <= 2) return 'h-64';
@@ -93,20 +108,20 @@ const Dashboard = () => {
       {/* Error Message */}
       {error && (
         <p className="text-red-500 font-medium mb-4">
-          Error: {error.message}
+          Error: {(error.status === 403 ? "No Summary Found." : error.message)}
         </p>
       )}
 
-
-
       {/* Main Content Section */}
       {courses.length > 0 && (
-        <div className="flex flex-col lg:flex-row  mt-10 -mx-4 justify-items-center-safe">
-
-
-          {/* Chart Container */}
+        <div className="flex flex-col lg:flex-row mt-10 -mx-4 justify-items-center-safe">
+          {/* Chart Container with animation */}
           {result && (
-            <div className="w-full lg:w-1/3 shadow-md rounded-lg p-6 flex items-center justify-center">
+            <div
+              className={`w-full lg:w-1/3 shadow-md rounded-lg p-6 flex items-center justify-center
+                transition-opacity duration-500 ease-in-out transform
+                ${showChart ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}
+            >
               <div className={`w-full ${getChartHeight()}`}>
                 <AttendanceSummaryChart data={result} />
               </div>
@@ -114,8 +129,7 @@ const Dashboard = () => {
           )}
 
           {/* Course List Container */}
-          <div className="w-full lg:w-2/3rounded-lg p-4 pt-7">
-            {/* <h3 className="text-lg font-semibold text-center mb-4">Courses</h3> */}
+          <div className="w-full lg:w-2/3 rounded-lg p-4 pt-7">
             <div className="space-y-3 max-h-[450px] overflow-y-auto">
               {courses.map((course, index) => (
                 <button
@@ -131,11 +145,8 @@ const Dashboard = () => {
               ))}
             </div>
           </div>
-
-          
         </div>
       )}
-
     </div>
   );
 };

@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FaCheckCircle, FaTimesCircle, FaClock } from 'react-icons/fa';
 
-const AttendanceByDate = () => {
-  const [registrationNumber, setRegistrationNumber] = useState('');
+const AttendanceByCourse = () => {
+  const [courseCode, setCourseCode] = useState('');
   const [date, setDate] = useState('');
   const [attendanceData, setAttendanceData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const fetchAttendance = async () => {
-    if (!registrationNumber.trim()) {
-      setError(new Error('Registration number is required'));
+    if (!courseCode.trim()) {
+      setError(new Error('Course code is required'));
       return;
     }
     if (!date.trim()) {
@@ -26,7 +26,7 @@ const AttendanceByDate = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `http://localhost:8080/attendance/student/${registrationNumber}/by-date`,
+        `http://localhost:8080/attendance/course/${courseCode}/by-date`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -64,10 +64,10 @@ const AttendanceByDate = () => {
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <input
           type="text"
-          placeholder="Enter Registration Number"
+          placeholder="Enter Course Code"
           className="flex-1 border border-gray-300 px-3 py-2 rounded"
-          value={registrationNumber}
-          onChange={(e) => setRegistrationNumber(e.target.value)}
+          value={courseCode}
+          onChange={(e) => setCourseCode(e.target.value)}
         />
         <input
           type="date"
@@ -77,7 +77,7 @@ const AttendanceByDate = () => {
         />
         <button
           onClick={fetchAttendance}
-          className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-green-700 hover:rounded-xl ttransition-all duration-300"
+          className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-green-700 hover:rounded-xl transition-all duration-300"
           disabled={loading}
         >
           {loading ? 'Loading...' : 'Fetch Attendance'}
@@ -96,16 +96,16 @@ const AttendanceByDate = () => {
             <table className="min-w-full">
               <thead className="bg-green-600">
                 <tr>
-                  <th className="px-4 py-3 text-left text-white">Course Code</th>
-                  <th className="px-4 py-3 text-left text-white">Course Name</th>
+                  <th className="px-4 py-3 text-left text-white">Registration Number</th>
+                  <th className="px-4 py-3 text-left text-white">Student Name</th>
                   <th className="px-4 py-3 text-left text-white">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {attendanceData.map((record, index) => (
                   <tr key={index} className="even:bg-gray-200">
-                    <td className="px-4 py-2">{record.courseCode}</td>
-                    <td className="px-4 py-2">{record.courseName}</td>
+                    <td className="px-4 py-2">{record.registrationNumber}</td>
+                    <td className="px-4 py-2">{record.firstName} {record.lastName}</td>
                     <td className="px-4 py-2">
                       {getStatusIcon(record.status)}
                       {record.status}
@@ -118,7 +118,6 @@ const AttendanceByDate = () => {
         </div>
       )}
 
-
       {attendanceData.length === 0 && !loading && !error && (
         <p className="text-gray-500 mt-4">No attendance records found.</p>
       )}
@@ -126,4 +125,4 @@ const AttendanceByDate = () => {
   );
 };
 
-export default AttendanceByDate;
+export default AttendanceByCourse;

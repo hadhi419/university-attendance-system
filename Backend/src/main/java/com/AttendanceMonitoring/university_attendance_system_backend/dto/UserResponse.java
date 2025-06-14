@@ -2,20 +2,20 @@ package com.AttendanceMonitoring.university_attendance_system_backend.dto;
 
 // UserResponse.java - DTO for sending user info back
 public class UserResponse {
-    private String username;
+    private String email;
     private String role;
 
-    public UserResponse(String username, String role) {
-        this.username = username;
+    public UserResponse(String email, String role) {
+        this.email = email;
         this.role = role;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String username) {
+        this.email = username;
     }
 
     public String getRole() {

@@ -65,7 +65,7 @@ const Record = () => {
           />
 
           <button
-            className="bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600 hover:rounded-xl ttransition-all duration-300 md:mt-0"
+            className="bg-cyan-500 text-white px-4 py-2 rounded hover:bg-green-600 hover:rounded-xl ttransition-all duration-300 md:mt-0"
             onClick={fetchStudents}
           >
             Fetch Students

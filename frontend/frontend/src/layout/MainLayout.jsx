@@ -1,20 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { Outlet } from 'react-router-dom';
-import AttendanceRecorder from '../components/AttendanceRecorder';
 
 const MainLayout = () => {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-     <div className="flex flex-col h-screen">
-      {/* Navbar spans the full width */}
+    <div className="flex flex-col h-screen">
+      {/* Navbar stays at the top */}
       <Navbar />
 
-      {/* Content area: sidebar + main */}
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 p-4 overflow-y-auto bg-gray-100">
-          <Outlet />
+      {/* Layout with sidebar and main content */}
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+
+        {/* Main content area scrolls independently */}
+        <main
+          className={`flex-1 bg-neutral-50 transition-all duration-300 ${
+            collapsed ? 'ml-2' : 'ml-2'
+          }`}
+        >
+          <div className="h-full overflow-y-auto p-4">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

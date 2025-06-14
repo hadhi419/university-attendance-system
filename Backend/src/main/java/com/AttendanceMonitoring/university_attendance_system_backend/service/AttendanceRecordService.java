@@ -1,5 +1,6 @@
 package com.AttendanceMonitoring.university_attendance_system_backend.service;
 
+import com.AttendanceMonitoring.university_attendance_system_backend.dto.AttendanceByCourse;
 import com.AttendanceMonitoring.university_attendance_system_backend.dto.AttendanceByDate;
 import com.AttendanceMonitoring.university_attendance_system_backend.dto.AttendanceSummary;
 import com.AttendanceMonitoring.university_attendance_system_backend.model.AttendanceRecord;
@@ -103,6 +104,15 @@ public class AttendanceRecordService {
         return record;
     }
 
+    private AttendanceByCourse mapRowByCourse(ResultSet rs) throws SQLException {
+        AttendanceByCourse record = new AttendanceByCourse();
+        record.setRegistrationNumber(rs.getString("registration_number"));  // assuming AttendanceByDate.date is LocalDate
+        record.setFirstName(rs.getString("first_name"));
+        record.setLastName(rs.getString("last_name"));
+        record.setStatus(rs.getString("status"));
+        return record;
+    }
+
     public List<AttendanceByDate> getAttendanceByDate(String registrationNumber, LocalDate date) {
         String sql = "SELECT a.date, a.course_code, b.course_name, a.status " +
                 "FROM attendance_records a " +
@@ -113,6 +123,16 @@ public class AttendanceRecordService {
 
         return jdbcTemplate.query(sql, new Object[]{registrationNumber, sqlDate}, (rs, rowNum) -> mapRowByDate(rs));
     }
+
+
+    public List<AttendanceByCourse> getAttendanceByCourse(String courseCode, LocalDate date) {
+        String sql = "SELECT a.registration_number , s.first_name, s.last_name, a.status  FROM attendance_records a JOIN students s ON a.registration_number = s.registration_number WHERE a.course_code = ? AND a.date = ?;";
+
+        Date sqlDate = Date.valueOf(date);  // Convert LocalDate to java.sql.Date
+
+        return jdbcTemplate.query(sql, new Object[]{courseCode, sqlDate}, (rs, rowNum) -> mapRowByCourse(rs));
+    }
+
 
     public List<AttendanceByDate> getAttendanceByDateSummary(String registrationNumber, LocalDate date) {
 
