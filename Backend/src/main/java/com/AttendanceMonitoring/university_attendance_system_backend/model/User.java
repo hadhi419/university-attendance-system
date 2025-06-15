@@ -5,14 +5,14 @@ public class User {
     private Long id;
     private String email;
     private String password;
-    private String role;
+    private Role role;  // changed from String to Role
 
     // No-args constructor
     public User() {
     }
 
     // All-args constructor
-    public User(String email, String password, String role) {
+    public User(String email, String password, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -43,11 +43,12 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+
+    public void setRole(Role role) {
         this.role = role;
     }
 }

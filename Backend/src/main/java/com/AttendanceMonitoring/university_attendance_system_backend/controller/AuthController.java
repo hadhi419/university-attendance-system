@@ -2,6 +2,7 @@ package com.AttendanceMonitoring.university_attendance_system_backend.controller
 
 import com.AttendanceMonitoring.university_attendance_system_backend.dto.LoginRequest;
 import com.AttendanceMonitoring.university_attendance_system_backend.dto.UserResponse;
+import com.AttendanceMonitoring.university_attendance_system_backend.model.Role;
 import com.AttendanceMonitoring.university_attendance_system_backend.model.User;
 import com.AttendanceMonitoring.university_attendance_system_backend.security.JwtUtil;
 
@@ -41,15 +42,16 @@ public class AuthController {
                         u.setId(rs.getLong("id"));
                         u.setEmail(rs.getString("email"));
                         u.setPassword(rs.getString("password"));
-                        u.setRole(rs.getString("role"));
+                        u.setRole(Role.valueOf(rs.getString("role").toUpperCase())); // 👈 this is essential
+
                         return u;
                     },
                     username
             );
 
             if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-                String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
-                UserResponse userResponse = new UserResponse(user.getEmail(), user.getRole());
+                String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+                UserResponse userResponse = new UserResponse(user.getEmail(), user.getRole().name());
 
                 return ResponseEntity.ok(Map.of(
                         "user", userResponse,

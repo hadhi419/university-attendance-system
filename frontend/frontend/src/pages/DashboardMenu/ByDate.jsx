@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { FaCheckCircle, FaTimesCircle, FaClock } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 const AttendanceByDate = () => {
   const [registrationNumber, setRegistrationNumber] = useState('');
@@ -59,7 +60,12 @@ const AttendanceByDate = () => {
   };
 
   return (
-    <div className="p-6">
+    <motion.div
+      className="p-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
+    >
       {/* Input fields */}
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <input
@@ -77,7 +83,7 @@ const AttendanceByDate = () => {
         />
         <button
           onClick={fetchAttendance}
-          className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-green-700 hover:rounded-xl ttransition-all duration-300"
+          className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-green-700 hover:rounded-xl transition-all duration-300"
           disabled={loading}
         >
           {loading ? 'Loading...' : 'Fetch Attendance'}
@@ -91,7 +97,13 @@ const AttendanceByDate = () => {
 
       {/* Results */}
       {attendanceData.length > 0 && (
-        <div className="overflow-x-auto mt-10">
+        <motion.div
+        className="-p-3"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        >
+          <div className="overflow-x-auto mt-10">
           <div className="inline-block min-w-full overflow-auto rounded-xl border border-gray-300 shadow-sm">
             <table className="min-w-full">
               <thead className="bg-green-600">
@@ -116,13 +128,13 @@ const AttendanceByDate = () => {
             </table>
           </div>
         </div>
+        </motion.div>
       )}
-
 
       {attendanceData.length === 0 && !loading && !error && (
         <p className="text-gray-500 mt-4">No attendance records found.</p>
       )}
-    </div>
+    </motion.div>
   );
 };
 

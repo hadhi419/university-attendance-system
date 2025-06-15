@@ -37,11 +37,19 @@ const Sidebar = () => {
       {!collapsed && (
         <nav className="flex flex-col gap-3">
           {/* Dashboard main link with submenu toggle */}
+
+          <Link
+            to="/home"
+            className="hover:underline"
+          >
+            Home Page
+          </Link>
           <div>
             <button
               onClick={toggleDashboardMenu}
               className="flex justify-between items-center w-full hover:underline"
             >
+        
               <span>Dashboard</span>
               {dashboardOpen ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
             </button>
@@ -62,7 +70,7 @@ const Sidebar = () => {
               onClick={toggleAdminMenu}
               className="flex justify-between items-center w-full hover:underline"
             >
-              <span>Admin</span>
+            <span>Add Users</span>
               {dashboardOpen ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
             </button>
 
@@ -70,14 +78,14 @@ const Sidebar = () => {
             {adminOpen && (
               <div className="ml-4 mt-2 flex flex-col gap-2 text-sm">
                 <Link to="/AdminMenu/AddStudent" className="hover:underline">Add Student</Link>
-                <Link to="DashboardMenu/AttendanceByDate" className="hover:underline">Add Lecturer</Link>
-                <Link to="/DashboardMenu/AttendanceByCourse" className="hover:underline">Add other staff</Link>
+                <Link to="/AdminMenu/AddAdmin" className="hover:underline">Add Admin</Link>
+                {/* <Link to="/DashboardMenu/AttendanceByCourse" className="hover:underline">Add other staff</Link> */}
               </div>
             )}
           </div>
 
           {/* Other main links */}
-          <Link to="/admin" className="hover:underline">Admin Panel</Link>
+          {/* <Link to="/admin" className="hover:underline">Admin Panel</Link> */}
           <Link to="/record" className="hover:underline">Record</Link>
           <Link
             to="/login"

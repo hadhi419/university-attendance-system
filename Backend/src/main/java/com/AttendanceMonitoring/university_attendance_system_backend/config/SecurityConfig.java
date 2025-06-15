@@ -31,7 +31,7 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
+                registry.addMapping("/admin/**")
                         .allowedOrigins("http://localhost:5173")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable() // Disable CSRF for REST APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login", "/api/register").permitAll() // Allow unauthenticated access
+                        .requestMatchers("/api/login", "/admin/addUser").permitAll() // Allow unauthenticated access
                         .anyRequest().authenticated() // Protect other endpoints
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

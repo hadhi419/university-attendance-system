@@ -5,7 +5,7 @@ const RegisterUser = () => {
   const [user, setUser] = useState({
     email: '',
     password: '',
-    role: 'student'
+    role: 'admin'
   });
 
   const [message, setMessage] = useState('');
@@ -20,7 +20,7 @@ const RegisterUser = () => {
     setMessage('');
 
     try {
-      await axios.post('http://localhost:8080/admin/addUser', user);
+      await axios.post('http://localhost:8080/api/register', user);
       setMessage('✅ Student registered successfully.');
       setUser({ email: '', password: '', role: 'student' });
     } catch (err) {
@@ -32,7 +32,7 @@ const RegisterUser = () => {
   return (
     <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg ">
       {/* <h1 className="text-3xl font-bold text-center text-cyan-900 mb-6">Admin Panel</h1> */}
-      <h2 className="text-xl font-semibold mb-4 text-gray-700">Register a New Student as an User</h2>
+      <h2 className="text-xl font-semibold mb-4 text-gray-700">Add New Admin</h2>
 
       {message && (
         <p className="mb-4 p-2 text-sm text-center rounded bg-gray-100 text-gray-800 border">
@@ -83,13 +83,13 @@ const RegisterUser = () => {
             className="mt-1 w-full p-2 border rounded bg-white"
             disabled
           >
-            <option value="student">Student</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
 
         <button
           type="submit"
-          className="w-full bg-cyan-700 text-white py-2 rounded hover:bg-green-800 hover:rounded-xl transition-all duration-300"
+          className="w-full bg-cyan-700 text-white py-2 rounded hover:bg-green-800 hover:rounded-xl transition-all  duration-300"
         >
           Register Student
         </button>

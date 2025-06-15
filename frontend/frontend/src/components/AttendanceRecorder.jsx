@@ -16,7 +16,7 @@ const statusStyles = {
 const AttendanceRecorder = ({ students, courseCode, selectedDate }) => {
   const [attendance, setAttendance] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
-  const [submissionResult, setSubmissionResult] = useState(null); // NEW: store submission summary
+  const [submissionResult, setSubmissionResult] = useState(null);
 
   const allSelected =
     students.length > 0 &&
@@ -28,7 +28,10 @@ const AttendanceRecorder = ({ students, courseCode, selectedDate }) => {
 
   const submitAttendance = () => {
     if (!allSelected) {
-      setSubmissionResult({ type: "error", message: "Please select all statuses before submitting." });
+      setSubmissionResult({
+        type: "error",
+        message: "Please select all statuses before submitting.",
+      });
       return;
     }
 
@@ -87,6 +90,12 @@ const AttendanceRecorder = ({ students, courseCode, selectedDate }) => {
   };
   const cancelSubmit = () => setShowConfirm(false);
 
+  // Helper to extract numeric part from registration number
+  const getStudentNumber = (regNo) => {
+    const match = regNo.match(/^2021ICT(\d+)$/);
+    return match ? parseInt(match[1], 10) : 0;
+  };
+
   return students.length > 0 ? (
     <>
       <div className="w-full px-0 py-6">
@@ -97,82 +106,88 @@ const AttendanceRecorder = ({ students, courseCode, selectedDate }) => {
         </div>
 
         <div className="flex flex-col space-y-2 mt-6">
-          {students.map((student, index) => {
-            const currentStatus = attendance[student.registrationNumber] || "";
+          {[...students]
+            .sort(
+              (a, b) =>
+                getStudentNumber(a.registrationNumber) -
+                getStudentNumber(b.registrationNumber)
+            )
+            .map((student, index) => {
+              const currentStatus = attendance[student.registrationNumber] || "";
 
-            return (
-              <div
-                key={index}
-                className="flex items-center p-2 border w-full border-gray-200 rounded-xl shadow-stone-950"
-              >
-                <div className="flex-1">{student.registrationNumber}</div>
-                <div className="flex-1">{`${student.firstName} ${student.lastName}`}</div>
-                <div className="flex-1">
-                  <Listbox
-                    value={currentStatus}
-                    onChange={(value) =>
-                      setAttendance((prev) => ({
-                        ...prev,
-                        [student.registrationNumber]: value,
-                      }))
-                    }
-                  >
-                    <div className="relative w-full">
-                      <Listbox.Button
-                        className={`relative w-full cursor-pointer rounded border border-gray-300 py-1.5 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 ${
-                          statusStyles[currentStatus]
-                        }`}
-                      >
-                        <span className="block truncate">
-                          {currentStatus || "Select Status"}
-                        </span>
-                        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                          <ChevronUpDownIcon className="h-5 w-5 text-gray-400" />
-                        </span>
-                      </Listbox.Button>
+              return (
+                <div
+                  key={index}
+                  className="flex items-center p-2 border w-full border-gray-200 rounded-xl shadow-stone-950"
+                >
+                  <div className="flex-1">{student.registrationNumber}</div>
+                  <div className="flex-1">{`${student.firstName} ${student.lastName}`}</div>
+                  <div className="flex-1">
+                    <Listbox
+                      value={currentStatus}
+                      onChange={(value) =>
+                        setAttendance((prev) => ({
+                          ...prev,
+                          [student.registrationNumber]: value,
+                        }))
+                      }
+                    >
+                      <div className="relative w-full">
+                        <Listbox.Button
+                          className={`relative w-full cursor-pointer rounded border border-gray-300 py-1.5 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 ${
+                            statusStyles[currentStatus]
+                          }`}
+                        >
+                          <span className="block truncate">
+                            {currentStatus || "Select Status"}
+                          </span>
+                          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                            <ChevronUpDownIcon className="h-5 w-5 text-gray-400" />
+                          </span>
+                        </Listbox.Button>
 
-                      <Listbox.Options className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {statuses.map((status) => (
-                          <Listbox.Option
-                            key={status}
-                            value={status}
-                            className={({ active }) =>
-                              `relative cursor-pointer select-none px-4 py-2 ${
-                                active
-                                  ? status === "Present"
-                                    ? "bg-green-300 text-green-800"
-                                    : status === "Absent"
-                                    ? "bg-red-300 text-red-800"
-                                    : "bg-yellow-200 text-yellow-800"
-                                  : "text-gray-700"
-                              }`
-                            }
-                          >
-                            {({ selected }) => (
-                              <>
-                                <span
-                                  className={`block truncate ${
-                                    selected ? "font-medium" : "font-normal"
-                                  }`}
-                                >
-                                  {status}
-                                </span>
-                                {selected ? (
-                                  <span className="absolute inset-y-0 right-2 flex items-center text-cyan-600">
-                                    <CheckIcon className="h-5 w-5" />
+                        <Listbox.Options className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          {statuses.map((status) => (
+                            <Listbox.Option
+                              key={status}
+                              value={status}
+                              className={({ active }) =>
+                                `relative cursor-pointer select-none px-4 py-2 ${
+                                  active
+                                    ? status === "Present"
+                                      ? "bg-green-300 text-green-800"
+                                      : status === "Absent"
+                                      ? "bg-red-300 text-red-800"
+                                      : "bg-yellow-200 text-yellow-800"
+                                    : "text-gray-700"
+                                }`
+                              }
+                            >
+                              {({ selected }) => (
+                                <>
+                                  <span
+                                    className={`block truncate ${
+                                      selected ? "font-medium" : "font-normal"
+                                    }`}
+                                  >
+                                    {status}
                                   </span>
-                                ) : null}
-                              </>
-                            )}
-                          </Listbox.Option>
-                        ))}
-                      </Listbox.Options>
-                    </div>
-                  </Listbox>
+                                  {selected ? (
+                                    <span className="absolute inset-y-0 right-2 flex items-center text-cyan-600">
+                                      <CheckIcon className="h-5 w-5" />
+                                    </span>
+                                  ) : null}
+                                </>
+                              )}
+                            </Listbox.Option>
+                          ))}
+                        </Listbox.Options>
+                      </div>
+                    </Listbox>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
 
         <div className="flex flex-col mt-6 items-end space-y-2">
@@ -188,7 +203,6 @@ const AttendanceRecorder = ({ students, courseCode, selectedDate }) => {
             Submit Attendance
           </button>
 
-          {/* Inline submission result message */}
           {submissionResult && (
             <div
               className={`whitespace-pre-line px-4 py-2 rounded ${
@@ -217,4 +231,3 @@ const AttendanceRecorder = ({ students, courseCode, selectedDate }) => {
 };
 
 export default AttendanceRecorder;
-

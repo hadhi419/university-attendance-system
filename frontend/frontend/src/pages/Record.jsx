@@ -4,7 +4,7 @@ import AttendanceRecorder from '../components/AttendanceRecorder';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ClipLoader } from 'react-spinners';
-
+import { motion } from 'framer-motion';
 
 const Record = () => {
   const [courseCode, setCourseCode] = useState("");
@@ -80,17 +80,24 @@ const Record = () => {
 
         {error && <p className="text-red-500">{error}</p>}
 
-        {students.length > 0 ? (
-          <AttendanceRecorder
-            students={students}
-            courseCode={courseCode}
-            selectedDate={selectedDate} // 🟡 Pass to AttendanceRecorder
-          />
-        ) : (
-          <p className="text-gray-500">
-            No students loaded yet. Please enter a course code and click "Fetch Students".
-          </p>
-        )}
+        <motion.div
+          className="p-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
+            {students.length > 0 ? (
+              <AttendanceRecorder
+                students={students}
+                courseCode={courseCode}
+                selectedDate={selectedDate} // 🟡 Pass to AttendanceRecorder
+              />
+            ) : (
+              <p className="text-gray-500">
+                No students loaded yet. Please enter a course code and click "Fetch Students".
+              </p>
+            )}  
+        </motion.div>
       </div>
     </>
   );
