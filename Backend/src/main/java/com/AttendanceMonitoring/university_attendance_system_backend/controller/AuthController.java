@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+origins = "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app"
 @RequestMapping("/api")
 public class AuthController {
 
