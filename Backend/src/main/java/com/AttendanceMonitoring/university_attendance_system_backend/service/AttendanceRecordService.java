@@ -1,5 +1,6 @@
 package com.AttendanceMonitoring.university_attendance_system_backend.service;
 
+import com.AttendanceMonitoring.university_attendance_system_backend.dto.AttendanceSummary;
 import com.AttendanceMonitoring.university_attendance_system_backend.model.AttendanceRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,14 +35,52 @@ public class AttendanceRecordService {
     }
 
     public List<AttendanceRecord> getAttendanceByStudentAndCourse(String registration_number, String course_code) {
-        String sql = "SELECT * FROM attendance_records WHERE registration_number = ? AND course_code = ?";
+        String sql =  "SELECT record_id, a.registration_number, course_code, date, status, remarks, recorded_by, a.created_at, first_name, last_name FROM attendance_records a JOIN students b ON a.registration_number = b.registration_number WHERE a.registration_number = ? AND a.course_code = ?;";
         return jdbcTemplate.query(sql, new Object[]{registration_number, course_code}, (rs, rowNum) -> mapRow(rs));
     }
+
+    public AttendanceSummary getAttendanceSummaryByStudentAndCourse(String registrationNumber, String courseCode) {
+        List<AttendanceRecord> records = getAttendanceByStudentAndCourse(registrationNumber, courseCode);
+        System.out.println("Records : "+records);
+        String firstName = records.isEmpty() ? "" : records.getFirst().getFirstName();
+        System.out.println(records.getFirst().getFirstName());
+        String lastName = records.isEmpty() ? "" : records.getFirst().getLastName();
+
+        long presentCount = records.stream()
+                .filter(r -> r.getStatus().equalsIgnoreCase("Present"))
+                .count();
+
+        long absentCount = records.stream()
+                .filter(r -> r.getStatus().equalsIgnoreCase("Absent"))
+                .count();
+
+        long lateCount = records.stream()
+                .filter(r -> r.getStatus().equalsIgnoreCase("Late"))
+                .count();
+
+        System.out.println(records.getFirst().getLastName());
+        long totalSessions = records.size();
+
+        AttendanceSummary summary = new AttendanceSummary();
+        summary.setRegistrationNumber(registrationNumber);
+        summary.setFirst_name(firstName);
+        summary.setLast_name(lastName);
+        summary.setCourseCode(courseCode);
+        summary.setPresentCount(presentCount);
+        summary.setAbsentCount(absentCount);
+        summary.setLateCount(lateCount);
+        summary.setTotalSessions(totalSessions);
+
+        return summary;
+    }
+
 
     private AttendanceRecord mapRow(ResultSet rs) throws SQLException {
         AttendanceRecord record = new AttendanceRecord();
         record.setRecord_id(rs.getInt("record_id"));
         record.setRegistration_number(rs.getString("registration_number"));
+        record.setFirstName(rs.getString("first_name"));
+        record.setLastName(rs.getString("last_name"));
         record.setCourse_code(rs.getString("course_code"));
         record.setDate(rs.getDate("date").toLocalDate());
         record.setStatus(rs.getString("status"));

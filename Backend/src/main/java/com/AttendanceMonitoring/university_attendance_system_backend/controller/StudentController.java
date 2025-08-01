@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/students")
+@CrossOrigin(origins = "http://localhost:5173")
 public class StudentController {
 
     @Autowired
@@ -37,4 +38,20 @@ public class StudentController {
         }
 
     }
+
+
+    @GetMapping("/course/{course_code}")
+    public  ResponseEntity<List<Student>> getStudents(@PathVariable String course_code){
+        List<Student> studentList =  studentService.getStudentsByCourse(course_code);
+        if(studentList.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        else{
+            return ResponseEntity.ok(studentList);
+        }
+
+    }
+
+
+
 }

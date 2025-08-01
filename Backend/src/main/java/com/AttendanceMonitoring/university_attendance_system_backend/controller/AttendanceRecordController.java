@@ -1,5 +1,6 @@
 package com.AttendanceMonitoring.university_attendance_system_backend.controller;
 
+import com.AttendanceMonitoring.university_attendance_system_backend.dto.AttendanceSummary;
 import com.AttendanceMonitoring.university_attendance_system_backend.model.AttendanceRecord;
 import com.AttendanceMonitoring.university_attendance_system_backend.service.AttendanceRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/attendance")
 public class AttendanceRecordController {
 
@@ -18,6 +20,7 @@ public class AttendanceRecordController {
     @PostMapping("/add")
     public ResponseEntity<String> addAttendance(@RequestBody AttendanceRecord record) {
         int result = attendanceRecordService.addAttendanceRecord(record);
+        System.out.println("Result :"+result);
         if(result > 0) {
             return ResponseEntity.status(201).body("Attendance record added successfully.");
         } else {
@@ -31,9 +34,9 @@ public class AttendanceRecordController {
     }
 
     @GetMapping("/student/{registration_number}/course/{course_code}")
-    public List<AttendanceRecord> getAttendanceByStudentAndCourse(
+    public AttendanceSummary getAttendanceByStudentAndCourse(
             @PathVariable String registration_number,
             @PathVariable String course_code) {
-        return attendanceRecordService.getAttendanceByStudentAndCourse(registration_number, course_code);
+        return attendanceRecordService.getAttendanceSummaryByStudentAndCourse(registration_number, course_code);
     }
 }
