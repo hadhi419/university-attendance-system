@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-origins = "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app"
+@CrossOrigin(origins = "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app")
 @RequestMapping("/courses")
 public class CourseController {
 
