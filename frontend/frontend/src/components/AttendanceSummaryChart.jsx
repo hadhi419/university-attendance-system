@@ -16,7 +16,8 @@ const AttendanceSummaryChart = ({ data }) => {
       },
     ],
   };
-
+  
+  // Options for the chart
   const options = {
     responsive: true,
     plugins: {
@@ -25,9 +26,20 @@ const AttendanceSummaryChart = ({ data }) => {
       },
       tooltip: {
         enabled: true,
+        callbacks: {
+        label: function (tooltipItem) {
+          const dataset = tooltipItem.dataset;
+          const total = dataset.data.reduce((sum, val) => sum + val, 0);
+          const value = dataset.data[tooltipItem.dataIndex];
+          const percentage = ((value / total) * 100).toFixed(1);
+          const label = tooltipItem.label || "";
+          return `${label}: ${value} (${percentage}%)`;
+        },
+      },
       },
     },
   };
+
 
   return (
     <>

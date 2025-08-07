@@ -19,11 +19,10 @@ public class AdminController {
     }
 
 
-    // DTO for registration request (you can create a separate class if you want)
     public static class RegistrationRequest {
         public String email;
         public String password;
-        public String role;  // remains String, converted in service
+        public String role;
     }
 
 

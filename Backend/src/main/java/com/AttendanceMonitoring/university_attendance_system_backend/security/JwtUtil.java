@@ -38,7 +38,7 @@ public class JwtUtil {
 
     public String generateToken(String username, String role) {
         Map<String, Object> claims = Map.of("role", role);
-        long expirationMillis = 1000 *30*60 ; // 1 hour
+        long expirationMillis = 1000 * 30 *60 ;
         return generateToken(claims, username, expirationMillis);
     }   
 

@@ -1,49 +1,67 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
- // Assuming you have a utility to manage auth state
 
 const Login = ({ setIsAuthenticated }) => {
-
-
-  const isAuthenticated = !!localStorage.getItem('token');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        const email = e.target.email.value;
-        const password = e.target.password.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-        if (!email || !password) {
-          alert("Please fill in all fields");
-          return;
-        }
-
-        try {
-          const response = await fetch('http://localhost:8080/api/login', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ username: email, password }),
-          });
+    if (!email || !password) {
+      alert("Please fill in all fields");
+      return;
+    }
 
 
-          console.log("response", response.body);
-            
-          if (response.ok) {
-             const data = await response.json();
-              localStorage.setItem('token', data.token);
-              setIsAuthenticated(true); // update auth state in AppRouter
-              navigate('/');
-          } else {
-            const errorData = await response.json();
-            alert(errorData.message || "Invalid credentials");
+    try {
+      const response = await fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: email, password }),
+      });
+
+      if (response.ok) {
+          const data = await response.json();
+          const token = data.token;
+          localStorage.setItem('token', token);
+
+          const payload = parseJwt(token);
+
+          if (payload && payload.exp) {
+  
+            localStorage.setItem('token_expiration', payload.exp * 1000);
           }
-        } catch (error) {
-          alert("Login failed: " + error.message);
+
+          setIsAuthenticated(true);
+          navigate('/');
         }
-};
+
+    } catch (error) {
+      alert("Login failed: " + error.message);
+    }
+  };
 
 
+      function parseJwt(token) {
+        try {
+          const base64Url = token.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const jsonPayload = decodeURIComponent(
+            atob(base64)
+              .split('')
+              .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+              .join('')
+            );
+            console.log("Parsed JWT payload:", jsonPayload);
+          return JSON.parse(jsonPayload);
+
+        } catch (e) {
+          return null;
+        }
+      }
 
 
   return (

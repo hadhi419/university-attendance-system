@@ -3,17 +3,17 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { Outlet } from 'react-router-dom';
 
-const MainLayout = () => {
+const MainLayout = ({ setIsAuthenticated }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
     <div className="flex flex-col h-screen">
       {/* Navbar stays at the top */}
-      <Navbar />
+      <Navbar setIsAuthenticated={setIsAuthenticated}/>
 
       {/* Layout with sidebar and main content */}
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+        <Sidebar setIsAuthenticated={setIsAuthenticated} />
 
         {/* Main content area scrolls independently */}
         <main

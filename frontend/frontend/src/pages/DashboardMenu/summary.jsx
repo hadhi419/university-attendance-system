@@ -71,13 +71,13 @@ const Dashboard = () => {
 
   return (
     <motion.div
-      className="p-6"
+      className="p-4 sm:p-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
       {/* Registration Input */}
-      <div className="flex flex-col md:flex-row gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
         <input
           type="text"
           placeholder="Registration Number"
@@ -96,14 +96,14 @@ const Dashboard = () => {
 
       {/* Error */}
       {error && (
-        <p className="text-red-500 font-medium mb-4">
+        <p className="text-red-500 font-medium mb-4 max-w-full break-words">
           Error: {error.status === 403 ? 'No Summary Found.' : error.message}
         </p>
       )}
 
       {/* Main Content */}
       {courses.length > 0 && (
-        <div className="flex flex-col lg:flex-row mt-10 -mx-4 justify-items-center-safe overflow-hidden">
+        <div className="flex flex-col gap-6 lg:flex-row lg:gap-4 mt-6 w-full">
           {/* Attendance Chart */}
           <AnimatePresence>
             {result && (
@@ -113,8 +113,7 @@ const Dashboard = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 30 }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
-                className="shadow-md rounded-lg p-6 flex items-center justify-center flex-shrink-0"
-                style={{ flexBasis: '33.3333%', maxWidth: '33.3333%' }}
+                className="shadow-md rounded-lg p-4 sm:p-6 flex items-center justify-center w-full lg:w-1/3"
                 layout
               >
                 <div className={`w-full ${getChartHeight()}`}>
@@ -126,11 +125,10 @@ const Dashboard = () => {
 
           {/* Course List Buttons */}
           <motion.div
-            className="rounded-lg p-4 pt-7 flex-shrink-0"
+            className="rounded-lg p-4 pt-6 w-full lg:w-2/3"
             initial={false}
             animate={{
-              flexBasis: result ? '66.6667%' : '100%',
-              maxWidth: result ? '66.6667%' : '100%',
+              width: result ? '100%' : '100%',
             }}
             transition={{ duration: 0.5, ease: 'easeInOut' }}
             style={{ minWidth: 0 }}
@@ -140,7 +138,7 @@ const Dashboard = () => {
               {courses.map((course, index) => (
                 <button
                   key={index}
-                  className={`w-full text-left border border-gray-300 rounded-lg px-4 py-2 shadow-sm font-medium transition-all duration-300
+                  className={`w-full text-left border border-gray-300 rounded-lg px-4 py-2 shadow-sm font-medium transition-all duration-300 whitespace-normal truncate
                     ${
                       selectedCourse === course.course_code
                         ? 'bg-green-500 text-white'

@@ -20,7 +20,7 @@ const RegisterUser = () => {
     setMessage('');
 
     try {
-      await axios.post('http://localhost:8080/api/register', user);
+      await axios.post('http://localhost:8080/admin/addUser', user);
       setMessage('✅ Student registered successfully.');
       setUser({ email: '', password: '', role: 'student' });
     } catch (err) {
