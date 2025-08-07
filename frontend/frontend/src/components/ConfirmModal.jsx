@@ -4,15 +4,15 @@ const ConfirmModal = ({ message, onConfirm, onCancel }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Trigger the animation after mount
+
     setIsVisible(true);
   }, []);
 
   const handleClose = () => {
-    // Animate out first
+
     setIsVisible(false);
-    // Wait for animation duration before calling onCancel
-    setTimeout(onCancel, 300); // match transition duration below
+
+    setTimeout(onCancel, 300); 
   };
 
   const handleConfirm = () => {

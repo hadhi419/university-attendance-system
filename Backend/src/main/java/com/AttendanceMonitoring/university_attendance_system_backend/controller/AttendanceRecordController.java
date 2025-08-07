@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app")
+@CrossOrigin(origins = {"http://localhost:5173", "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app"})
 @RequestMapping("/attendance")
 public class AttendanceRecordController {
 

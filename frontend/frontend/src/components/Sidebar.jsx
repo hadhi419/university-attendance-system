@@ -89,6 +89,11 @@ const Sidebar = ({ setIsAuthenticated }) => {
             )}
           </div>
 
+          <Link to="/enroll" className="hover:underline">
+            Enroll Students
+          </Link>
+
+
           <Link to="/record" className="hover:underline">
             Record
           </Link>

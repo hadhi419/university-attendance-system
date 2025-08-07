@@ -13,6 +13,7 @@ import ByDate from '../pages/DashboardMenu/ByDate';
 import AttendanceByCourse from '../pages/DashboardMenu/AttendanceByCourse';
 import AddStudent from '../pages/AdminMenu/AddStudent';
 import AddAdmin from '../pages/AdminMenu/AddAdmin';
+import Enroll from '../pages/enroll';
 
 const AppRouter = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -63,6 +64,7 @@ const AppRouter = () => {
             <Route path="DashboardMenu/AttendanceByCourse" element={<AttendanceByCourse />} />
             <Route path="AdminMenu/AddStudent" element={<AddStudent />} />
             <Route path="AdminMenu/AddAdmin" element={<AddAdmin />} />
+            <Route path="/enroll" element={<Enroll />} />
           </Route>
         </Route>
 

@@ -6,10 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.AttendanceMonitoring.university_attendance_system_backend.dto.EnrollmentDTO;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app")
+@CrossOrigin(origins = {"http://localhost:5173", "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app"})
 @RequestMapping("/enrollments")
 public class EnrollmentController {
 
@@ -17,12 +21,18 @@ public class EnrollmentController {
     private EnrollmentService enrollmentService;
 
     @PostMapping("/enroll")
-    public ResponseEntity<String> enrollStudent(@RequestBody Enrollment enrollment) {
-        int result = enrollmentService.enrollStudent(enrollment);
-        return result > 0
-                ? ResponseEntity.ok("Student enrolled successfully.")
-                : ResponseEntity.badRequest().body("Enrollment failed.");
+    public ResponseEntity<Map<String, Object>> enrollStudent(@RequestBody List<EnrollmentDTO> enrollments) {
+        Map<String, Integer> result = enrollmentService.bulkEnroll(enrollments);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Enrollment processed.");
+        response.put("successful", result.get("success"));
+        response.put("skipped_duplicates", result.get("skipped"));
+
+        return ResponseEntity.ok(response);
     }
+
+
 
     @GetMapping("/all")
     public List<Enrollment> getAllEnrollments() {

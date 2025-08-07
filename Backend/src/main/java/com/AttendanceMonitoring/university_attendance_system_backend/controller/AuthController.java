@@ -9,13 +9,19 @@ import com.AttendanceMonitoring.university_attendance_system_backend.security.Jw
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app")
+@CrossOrigin(origins = {"http://localhost:5173", "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app"})
 @RequestMapping("/api")
 public class AuthController {
 
@@ -31,10 +37,24 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+
+
+        boolean captchaVerified = verifyCaptcha(loginRequest.getCaptcha());
+
+        if (!captchaVerified) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Captcha verification failed");
+        }
+
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
+        System.out.println(username);
+        System.out.println(password);
+
         try {
+
+            System.out.println("User found");
+
             User user = jdbcTemplate.queryForObject(
                     "SELECT * FROM users WHERE email = ?",
                     (rs, rowNum) -> {
@@ -66,4 +86,30 @@ public class AuthController {
                     .body(Map.of("message", "Invalid email or password"));
         }
     }
+
+    @Value("${recaptcha.secret}")
+    private String recaptchaSecret;
+
+    private boolean verifyCaptcha(String captchaResponse) {
+
+
+        String url = "https://www.google.com/recaptcha/api/siteverify";
+        RestTemplate restTemplate = new RestTemplate();
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        System.out.println("Recaptcha secret"+recaptchaSecret);
+        params.add("secret", recaptchaSecret);
+        params.add("response", captchaResponse);
+
+        ResponseEntity<Map> response = restTemplate.postForEntity(url, params, Map.class);
+        Map<String, Object> body = response.getBody();
+
+        System.out.println(body);
+
+        return (Boolean) body.get("success");
+    }
+
+
+
 }

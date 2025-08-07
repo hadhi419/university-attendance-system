@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app")
+@CrossOrigin(origins = {"http://localhost:5173", "https://university-attendance-system-git-feat-5018fb-hadhi419s-projects.vercel.app"})
 @RequestMapping("/admin")
 public class AdminController {
 

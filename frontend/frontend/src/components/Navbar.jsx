@@ -1,28 +1,25 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ setIsAuthenticated }) => {
-  const navigate = useNavigate(); // ✅ Now you can use `navigate`
+  const navigate = useNavigate();
 
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem('token');
-    setIsAuthenticated(false); // ✅ make sure this is passed in from parent
-    navigate('/login'); // ✅ works now
+    setIsAuthenticated(false);
+    navigate('/login');
   };
 
   return (
-    <header className="bg-cyan shadow px-4 py-3 w-full flex justify-between items-center h-15">
-      <h1 className="text-xl font-bold text-cyan-800">Attendance System</h1>
+    <header className="bg-white shadow-2xl shadow-gray-800/60 z-20 relative px-6 py-4 w-full flex justify-between items-center">
+      <h1 className="text-2xl font-bold text-cyan-900">Attendance Monitoring System</h1>
       <ul className="flex space-x-5">
-        {/* <li>
-          <Link to="/" className="text-blue-600 hover:underline">Dashboard</Link>
-        </li>
         <li>
-          <Link to="/admin" className="text-blue-600 hover:underline">Admin Panel</Link>
-        </li> */}
-        <li>
-          <button onClick={handleLogout} className="text-blue-900 hover:underline bg-none border-none p-0 text-left">
+          <button
+            onClick={handleLogout}
+            className="text-blue-900 hover:underline bg-none border-none p-0 text-left"
+          >
             Logout
           </button>
         </li>
