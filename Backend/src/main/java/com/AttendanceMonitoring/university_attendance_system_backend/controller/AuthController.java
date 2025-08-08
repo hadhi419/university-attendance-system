@@ -39,11 +39,11 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
 
-        boolean captchaVerified = verifyCaptcha(loginRequest.getCaptcha());
-
-        if (!captchaVerified) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Captcha verification failed");
-        }
+//        boolean captchaVerified = verifyCaptcha(loginRequest.getCaptcha());
+//
+//        if (!captchaVerified) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Captcha verification failed");
+//        }
 
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
